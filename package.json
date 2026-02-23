@@ -8,6 +8,8 @@
         "dev": "nodemon --watch src --ext ts --exec tsx src/app.ts",
         "watch:build": "tsc --build --force --verbose --watch",
         "knex:dev": "tsx src/utils/knex.ts",
+        "knex:migrate:latest": "knex migrate:latest --knexfile src/config/knex/knexfile.js",
+        "knex:migrate:make": "knex migrate:make --knexfile src/config/knex/knexfile.js",
 
         "build": "tsc --allowJs",
         "start": "node dist/app.js",
