@@ -1,3 +1,4 @@
+import { toWBDateFormat } from '#utils/formatter.js';
 import axios from 'axios';
 
 export interface WBTariffItem {
@@ -39,7 +40,7 @@ export class WildberriesAPI {
    */
   async fetchBoxTariffs(date?: string): Promise<WBTariffItem[]> {
     try {
-      const queryDate = date || new Date().toISOString().split('T')[0];
+      const queryDate = date || toWBDateFormat(new Date());
       const response = await axios.get<WBTariffResponse>(this.baseURL, {
         headers: {
           'Authorization': this.apiToken,

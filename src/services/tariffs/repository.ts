@@ -1,5 +1,6 @@
 import knex from 'knex';
 import knexConfig from '../../config/knex/knexfile.js';
+import { toWBDateFormat } from '#utils/formatter.js';
 
 const db = knex(knexConfig);
 
@@ -58,10 +59,25 @@ export class TariffsRepository {
   }
 
   async getTodayTariffs(): Promise<Tariff[]> {
-    const today = new Date().toISOString().split('T')[0];
+    const today = toWBDateFormat(new Date());
     
     const tariffs = await db('tariffs')
       .where('tariff_date', today)
+      .orderBy('coefficient', 'asc');
+
+    return tariffs;
+  }
+
+   /**
+   * Получить актуальные тарифы для экспорта в Google Sheets
+   */
+  async getTariffsForExport(): Promise<Tariff[]> {
+    const today = toWBDateFormat(new Date());
+
+    // Только с коэффициентом > 0, отсортированные
+    const tariffs = await db('tariffs')
+      .where('tariff_date', today)
+      .andWhere('coefficient', '>', 0)
       .orderBy('coefficient', 'asc');
 
     return tariffs;
