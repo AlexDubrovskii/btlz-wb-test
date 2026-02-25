@@ -1,54 +1,40 @@
-# Шаблон для выполнения тестового задания
+# Автоматическая синхронизация тарифов Wildberries в Google Sheets.
 
 ## Описание
-Шаблон подготовлен для того, чтобы попробовать сократить трудоемкость выполнения тестового задания.
 
-В шаблоне настоены контейнеры для `postgres` и приложения на `nodejs`.  
-Для взаимодействия с БД используется `knex.js`.  
-В контейнере `app` используется `build` для приложения на `ts`, но можно использовать и `js`.
+ - Каждый час получает тарифы из API Wildberries
+ - Сохраняет в PostgreSQL с UPSERT (защита от дублей)
+ - Экспортирует в Google Sheets (лист stocks_coefs)
+ - Данные сортируются по коэффициенту
 
-Шаблон не является обязательным!\
-Можно использовать как есть или изменять на свой вкус.
+## Запуск
 
-Все настройки можно найти в файлах:
-- compose.yaml
-- dockerfile
-- package.json
-- tsconfig.json
-- src/config/env/env.ts
-- src/config/knex/knexfile.ts
+1. Клонировать репозиторий
+git clone https://github.com/AlexDubrovskii/btlz-wb-test.git
+cd btlz-wb-test
 
-## Команды:
+2. Создать .env
 
-Запуск базы данных:
-```bash
-docker compose up -d --build postgres
-```
+3. Заполнить .env и положить google-service-account.json в корень
 
-Для выполнения миграций и сидов не из контейнера:
-```bash
-npm run knex:dev migrate latest
-```
-
-```bash
-npm run knex:dev seed run
-```
-Также можно использовать и остальные команды (`migrate make <name>`,`migrate up`, `migrate down` и т.д.)
-
-Для запуска приложения в режиме разработки:
-```bash
-npm run dev
-```
-
-Запуск проверки самого приложения:
-```bash
-docker compose up -d --build app
-```
-
-Для финальной проверки рекомендую:
-```bash
-docker compose down --rmi local --volumes
+4. Запустить
 docker compose up --build
-```
 
-PS: С наилучшими пожеланиями!
+## Переменные окружения:
+
+WB_API_TOKEN - Токен API Wildberries
+GOOGLE_SERVICE_ACCOUNT_KEY_PATH - Путь к ключу Google (./google-service-account.json)
+GOOGLE_SHEET_IDS - ID Google таблиц (через запятую)
+DB_HOST - Хост PostgreSQL (postgres)
+POSTGRES_USER - Пользователь БД (postgres)
+POSTGRES_PASSWORD - Пароль БД (postgres)
+
+## База данных
+
+Таблица tariffs:
+ tariff_date — дата тарифа
+ box_type — склад
+ coefficient — коэффициент
+ price_rub — цена
+ min_weight_kg — мин. вес
+ fetched_at — время получения
