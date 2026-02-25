@@ -23,10 +23,15 @@ docker compose up --build
 ## Переменные окружения:
 
 WB_API_TOKEN - Токен API Wildberries
+
 GOOGLE_SERVICE_ACCOUNT_KEY_PATH - Путь к ключу Google (./google-service-account.json)
+
 GOOGLE_SHEET_IDS - ID Google таблиц (через запятую)
+
 DB_HOST - Хост PostgreSQL (postgres)
+
 POSTGRES_USER - Пользователь БД (postgres)
+
 POSTGRES_PASSWORD - Пароль БД (postgres)
 
 ## База данных
